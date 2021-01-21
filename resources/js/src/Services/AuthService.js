@@ -12,8 +12,6 @@ export default function(vue) {
 			} else {
 				vue.$localStorage.remove('user');
 			}
-
-			vue.$root.forceUpdate();
 		},
 		login(input) {
 			return axios.post(vue.apiRoute('api.session.store'), input)
