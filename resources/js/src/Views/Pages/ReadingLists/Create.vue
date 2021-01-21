@@ -68,13 +68,13 @@
 									<b-button-toolbar>
 										<b-button-group size="md">
 											<b-button type="button" variant="danger" @click="clearBooks">
-												<i class="fas fa-users-slash"></i>
+												<i class="fas fa-times"></i>
 												<span>{{ trans('forms.clear') }}</span>
 											</b-button>
 										</b-button-group>
 										<b-button-group class="ml-auto">
 											<b-button type="button" variant="info" @click="showBooks">
-												<i class="fas fa-users"></i>
+												<i class="fas fa-search"></i>
 												<span>{{ trans('forms.search') }}</span>
 											</b-button>
 										</b-button-group>

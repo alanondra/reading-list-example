@@ -14,7 +14,7 @@
 									<b-button-toolbar>
 										<b-button-group size="sm">
 											<b-button :disabled="isSelected(data.item.id)" type="button" :variant="state(data.item.id)" @click="add(data.item)" :title="trans('readingLists.actions.books.add')">
-												<i class="fas fa-user-plus"></i>
+												<i class="fas fa-plus"></i>
 											</b-button>
 										</b-button-group>
 									</b-button-toolbar>
@@ -55,7 +55,7 @@
 								<b-button-toolbar>
 									<b-button-group size="sm">
 										<b-button type="button" variant="outline-danger" @click="remove(data.item.id)" :title="trans('readingLists.actions.books.remove')">
-											<i class="fas fa-user-times"></i>
+											<i class="fas fa-times"></i>
 										</b-button>
 									</b-button-group>
 								</b-button-toolbar>
