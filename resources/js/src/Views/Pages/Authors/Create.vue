@@ -125,7 +125,7 @@
 							});
 						}
 
-						this.redirect('books.list');
+						this.redirect('authors.list');
 					})
 					.catch((error) => {
 						let errors = _.get(error.response, 'data.errors') || [];
