@@ -8,7 +8,7 @@ export default {
 			}
 
 			if (value.length === 13) {
-				let matches = /^(\d{3})(\d{1})(\d{2})(\d{6})(\d{1})$/.exec(value);
+				let matches = /^([\dX]{3})([\dX]{1})([\dX]{2})([\dX]{6})([\dX]{1})$/.exec(value);
 
 				if (!matches) {
 					console.log(`Invalid match for 13-digit ISBN: ${value}`);
@@ -21,7 +21,7 @@ export default {
 			}
 
 			if (value.length === 10) {
-				let matches = /^(\d{1})(\d{2})(\d{6})(\d{1})$/.exec(value);
+				let matches = /^([\dX]{1})([\dX]{2})([\dX]{6})([\dX]{1})$/.exec(value);
 
 				if (!matches) {
 					console.log(`Invalid match for 10-digit ISBN: ${value}`);
