@@ -1,20 +1,20 @@
 <template>
 	<div>
 		<load-spinner :loaded="loaded">
-			<author-search :visible="modals.authors" :selected="form.authors" @accept="acceptAuthors" @hide="hideAuthors"></author-search>
+			<book-search :visible="modals.books" :selected="form.books" @accept="acceptBooks" @hide="hideBooks"></book-search>
 			<b-container>
 				<b-form @submit="onSubmit">
 					<b-row>
 						<b-col cols="12">
-							<h2>{{ trans('books.create') }}</h2>
+							<h2>{{ trans('readingLists.create') }}</h2>
 						</b-col>
 					</b-row>
 					<b-row>
 						<b-col md="6" sm="12">
 							<b-form-group
-								id="isbn-group"
-								:label="trans('books.attributes.isbn')"
-								label-for="isbn"
+								id="name-group"
+								:label="trans('readingLists.attributes.name')"
+								label-for="name"
 							>
 								<b-input-group>
 									<template #prepend>
@@ -24,35 +24,8 @@
 									</template>
 									<b-form-input
 										required
-										id="isbn"
-										v-model="form.isbn"
-										type="text"
-										maxlength="13"
-										:state="state('isbn')"
-										@change="resetState('isbn')"
-										@input="resetState('isbn')"
-									></b-form-input>
-									<b-form-invalid-feedback :state="state('isbn')">
-										<p v-for="(error, i) in errors.isbn">{{ error }}</p>
-									</b-form-invalid-feedback>
-								</b-input-group>
-							</b-form-group>
-
-							<b-form-group
-								id="name-group"
-								:label="trans('books.attributes.name')"
-								label-for="name"
-							>
-								<b-input-group>
-									<template #prepend>
-										<b-input-group-text>
-											<i class="fas fa-book"></i>
-										</b-input-group-text>
-									</template>
-									<b-form-input
-										required
 										id="name"
-										v-model="form.name"
+										v-model="input.name"
 										type="text"
 										maxlength="256"
 										:state="state('name')"
@@ -64,40 +37,20 @@
 									</b-form-invalid-feedback>
 								</b-input-group>
 							</b-form-group>
-
-							<b-form-group
-								id="description-group"
-								:label="trans('authors.attributes.description')"
-								label-for="login"
-							>
-								<b-input-group>
-									<template #prepend>
-										<b-input-group-text>
-											<i class="fas fa-book-open"></i>
-										</b-input-group-text>
-									</template>
-									<b-form-textarea
-										id="description"
-										v-model="form.description"
-										maxlength="65535"
-										:state="state('description')"
-										@change="resetState('description')"
-										@input="resetState('description')"
-									></b-form-textarea>
-									<b-form-invalid-feedback :state="state('description')">
-										<p v-for="(error, i) in errors.description">{{ error }}</p>
-									</b-form-invalid-feedback>
-								</b-input-group>
-							</b-form-group>
 						</b-col>
+
 						<b-col md="6" sm="12" class="mt-2">
-							<b-card :title="trans('books.attributes.authors')">
-								<b-card-body v-if="form.authors.length > 0">
-									<b-table striped :items="form.authors" :fields="fields.authors">
+							<b-card :title="trans('readingLists.attributes.books')">
+								<b-card-body v-if="form.books.length > 0">
+									<b-table striped :items="form.books" :fields="fields.books">
+										<template #cell(isbn)="data">
+											{{ isbn(data.item.isbn) }}
+										</template>
+
 										<template #cell(actions)="data">
 											<b-button-toolbar>
 												<b-button-group size="sm">
-													<b-button type="button" variant="outline-danger" @click="removeAuthor(data.item.id)">
+													<b-button type="button" variant="outline-danger" @click="removeBook(data.item.id)">
 														<i class="fas fa-user-times"></i>
 														<span>{{ trans('forms.remove') }}</span>
 													</b-button>
@@ -108,19 +61,19 @@
 								</b-card-body>
 
 								<b-card-body v-else>
-									{{ trans('books.actions.authors.empty') }}
+									{{ trans('readingLists.actions.books.empty') }}
 								</b-card-body>
 
 								<template #footer>
 									<b-button-toolbar>
 										<b-button-group size="md">
-											<b-button type="button" variant="danger" @click="clearAuthors">
+											<b-button type="button" variant="danger" @click="clearBooks">
 												<i class="fas fa-users-slash"></i>
 												<span>{{ trans('forms.clear') }}</span>
 											</b-button>
 										</b-button-group>
 										<b-button-group class="ml-auto">
-											<b-button type="button" variant="info" @click="showAuthors">
+											<b-button type="button" variant="info" @click="showBooks">
 												<i class="fas fa-users"></i>
 												<span>{{ trans('forms.search') }}</span>
 											</b-button>
@@ -147,32 +100,33 @@
 </template>
 
 <script>
-	import { default as AuthorSearch } from './Dialogs/Authors';
+	import { default as BookSearch }  from './Dialogs/Books';
 
 	export default {
 		components: {
-			AuthorSearch
+			BookSearch
 		},
 		data() {
 			return {
 				loaded: true,
 				form: {
-					isbn: null,
 					name: null,
-					description: null,
-					authors: [],
+					books: []
 				},
 				errors: {
-					isbn: [],
 					name: [],
-					description: [],
-					authors: []
+					books: []
 				},
 				fields: {
-					authors: [
+					books: [
+						{
+							key: 'isbn',
+							label: this.trans('books.attributes.isbn'),
+							sortable: false
+						},
 						{
 							key: 'name',
-							label: this.trans('authors.attributes.name'),
+							label: this.trans('books.attributes.name'),
 							sortable: false
 						},
 						{
@@ -183,7 +137,7 @@
 					]
 				},
 				modals: {
-					authors: false
+					books: false
 				}
 			};
 		},
@@ -191,7 +145,7 @@
 			input() {
 				let input = _.cloneDeep(this.form);
 
-				input.authors = input.authors.map(author => author.id);
+				input.books = input.books.map(book => book.id);
 
 				return input;
 			}
@@ -217,7 +171,7 @@
 
 				this.resetState();
 
-				axios.post(this.apiRoute('api.books.store'), this.input)
+				axios.post(this.apiRoute('api.readingLists.store'), this.input)
 					.then((response) => {
 						let success = _.get(response.data, 'success');
 
@@ -228,7 +182,9 @@
 							});
 						}
 
-						this.redirect('books.list');
+						let readingListId = _.get(response.data, 'data.id');
+
+						this.redirect('reading_lists.show', { id });
 					})
 					.catch((error) => {
 						let errors = _.get(error.response, 'data.errors') || [];
@@ -248,26 +204,26 @@
 						this.loaded = true;
 					});
 			},
-			removeAuthor(id) {
-				this.form.authors = this.form.authors.filter((author, i) => {
-					return (author.id != id);
+			removeBook(id) {
+				this.form.books = this.form.books.filter((book, i) => {
+					return (book.id != id);
 				});
 			},
-			clearAuthors() {
-				let confirmed = window.confirm(this.trans('authors.actions.authors.clear_confirm'));
+			clearBooks() {
+				let confirmed = window.confirm(this.trans('readingLists.actions.books.clear_confirm'));
 
 				if (confirmed) {
-					this.authors = [];
+					this.books = [];
 				}
 			},
-			showAuthors() {
-				this.modals.authors = true;
+			showBooks() {
+				this.modals.books = true;
 			},
-			hideAuthors() {
-				this.modals.authors = false;
+			hideBooks() {
+				this.modals.books = false;
 			},
-			acceptAuthors(authors) {
-				this.form.authors = authors;
+			acceptBooks(books) {
+				this.form.books = books;
 			}
 		}
 	}

@@ -79,6 +79,6 @@ class AuthorController extends AbstractController
 
 	public function destroy(Author $author)
 	{
-		//
+		throw new NotImplementedException();
 	}
 }

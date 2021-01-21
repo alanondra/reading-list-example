@@ -20,7 +20,7 @@ class CreateReadingListItemsTable extends Migration
 
 			$table->integer('book_id');
 
-			$table->dateTime('finished_at');
+			$table->dateTime('finished_at')->nullable();
 
 			$table->timestamps();
 

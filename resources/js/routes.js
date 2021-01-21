@@ -5,6 +5,7 @@ import Auth from '@/src/Views/Pages/Auth';
 import Profile from '@/src/Views/Pages/Profile';
 import Authors from '@/src/Views/Pages/Authors';
 import Books from '@/src/Views/Pages/Books';
+import ReadingLists from '@/src/Views/Pages/ReadingLists';
 
 const routes = [
 	{ path: '/', name: 'home', component: Home, meta: { title: 'Home' } },
@@ -18,9 +19,9 @@ const routes = [
 	{ path: '/books', name: 'books.list', component: Books.List, meta: { title: 'Books' } },
 	{ path: '/books/create', name: 'books.create', component: Books.Create, meta: { title: 'Create Book' } },
 	{ path: '/books/:isbn', name: 'books.show', component: Books.Show, meta: { title: 'Book' } },
-//	{ path: '/lists', name: 'lists.list', component: Lists.List, meta: { title: 'Reading Lists' } },
-//	{ path: '/lists/:id', name: 'lists.show', component: Lists.Show, meta: { title: 'Reading List' } },
-//	{ path: '/lists/create', name: 'lists.create', component: Lists.Create, meta: { title: 'Create Reading List' } },
+	{ path: '/lists', name: 'reading_lists.list', component: ReadingLists.List, meta: { title: 'Reading Lists' } },
+	{ path: '/lists/create', name: 'reading_lists.create', component: ReadingLists.Create, meta: { title: 'Create Reading List' } },
+	{ path: '/lists/:id', name: 'reading_lists.show', component: ReadingLists.Show, meta: { title: 'Reading List' } },
 	{ path: '*', name: 'default', component: NotFound, meta: { title: 'Page Not Found' } }
 ];
 

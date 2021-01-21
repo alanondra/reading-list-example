@@ -5,7 +5,7 @@
 				<b-form @submit="update">
 					<b-row>
 						<b-col md="12" lg="8">
-							<h2>{{ trans('app.navbar.books') }}</h2>
+							<h2>{{ trans('app.navbar.reading_lists') }}</h2>
 						</b-col>
 						<b-col v-if="$user" md="12" lg="4">
 							<b-button-toolbar class="my-2">
@@ -19,18 +19,15 @@
 						</b-col>
 					</b-row>
 					<b-row class="my-2">
-						<b-col cols="12" v-if="books.length === 0">
-							{{ trans('books.empty') }}
+						<b-col cols="12" v-if="reading_lists.length === 0">
+							{{ trans('readingLists.empty') }}
 						</b-col>
 						<b-col cols="12" v-else>
-							<b-table striped :items="books" :fields="fields">
-								<template #cell(isbn)="data">
-									{{ isbn(data.item.isbn) }}
-								</template>
+							<b-table striped :items="reading_lists" :fields="fields">
 								<template #cell(actions)="data">
 									<b-button-toolbar>
 										<b-button-group size="sm">
-											<b-button type="button" :to="{ name: 'books.show', params: { isbn: data.item.isbn } }">
+											<b-button type="button" :to="{ name: 'reading_lists.show', params: { id: data.item.id } }">
 												<i class="far fa-eye"></i>
 												<span>{{ trans('forms.view') }}</span>
 											</b-button>
@@ -78,14 +75,9 @@
 				},
 				fields: [
 					{
-						key: 'isbn',
-						sortable: false,
-						label: this.trans('books.attributes.isbn')
-					},
-					{
 						key: 'name',
 						sortable: false,
-						label: this.trans('books.attributes.name')
+						label: this.trans('readingLists.attributes.name')
 					},
 					{
 						key: 'actions',
@@ -96,22 +88,27 @@
 					page: 1,
 					count: null
 				},
-				books: []
+				reading_lists: []
 			};
 		},
 		mounted() {
+			if (!this.$user) {
+				this.redirect('login');
+				return;
+			}
+
 			this.update();
 		},
 		methods: {
 			create() {
-				this.redirect('books.create');
+				this.redirect('reading_lists.create');
 			},
 			update() {
-				return axios.get(this.apiRoute('api.books.index', this.input))
+				return axios.get(this.apiRoute('api.readingLists.index', this.input))
 					.then((response) => {
 						let data = response.data;
 						let meta = _.get(data, 'meta');
-						let books = _.get(data, 'data');
+						let reading_lists = _.get(data, 'data');
 
 						if (this.input.count === null) {
 							this.input.count = Number.parseInt(_.get(meta, 'per_page') || 0);
@@ -121,7 +118,7 @@
 							this.pagination.pages = Number.parseInt(meta.last_page);
 						}
 
-						this.books = books;
+						this.reading_lists = reading_lists;
 					})
 					.catch((error) => {
 						let errors = _.get(error.response, 'data.errors') || [];
@@ -139,7 +136,7 @@
 			},
 			linkGen(pageNum) {
 				return {
-					name: 'books.list',
+					name: 'reading_lists.list',
 					query: {
 						page: pageNum,
 						count: this.input.count

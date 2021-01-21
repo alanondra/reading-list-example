@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Throwable;
+use App\Exceptions\NotImplementedException;
 use App\Http\Requests\PaginatedFormRequest;
 use App\Http\Requests\Author\{
 	StoreRequest,
@@ -72,15 +73,11 @@ class BookController extends AbstractController
 
 	public function update(Book $book, UpdateRequest $request)
 	{
-		//
+		throw new NotImplementedException();
 	}
 
 	public function destroy(Book $book)
 	{
-		$bookId = $book->getKey();
-
-		$book->delete();
-
-		return $bookId;
+		throw new NotImplementedException();
 	}
 }

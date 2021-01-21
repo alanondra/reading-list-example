@@ -9,6 +9,7 @@ return [
 	'cancel' => 'Cancel',
 	'clear' => 'Clear',
 	'close' => 'Close',
+	'complete' => 'Complete',
 	'create' => 'Create',
 	'delete' => 'Delete',
 	'disassociate' => 'Disassociate',

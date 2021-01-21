@@ -12,6 +12,15 @@ class ReadingList extends AbstractModel
 	protected $table = 'reading_lists';
 
 	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = [
+		'name',
+	];
+
+	/**
 	 * Set up the user relation.
 	 *
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -19,6 +28,16 @@ class ReadingList extends AbstractModel
 	public function user()
 	{
 		return $this->belongsTo(User::class);
+	}
+
+	/**
+	 * Set up the items relation.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function items()
+	{
+		return $this->hasMany(ReadingListItem::class);
 	}
 
 	/**

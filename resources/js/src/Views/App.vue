@@ -9,9 +9,9 @@
 
 					<b-collapse id="nav-collapse" is-nav>
 						<b-navbar-nav>
-							<b-nav-item :to="{ name: 'books.list'}"><i class="fas fa-book"></i> {{ trans('app.navbar.books') }}</b-nav-item>
-							<b-nav-item :to="{ name: 'authors.list'}"><i class="fas fa-user-edit"></i> {{ trans('app.navbar.authors') }}</b-nav-item>
-							<b-nav-item href="/lists"><i class="fas fa-clipboard-list"></i> {{ trans('app.navbar.reading_lists') }}</b-nav-item>
+							<b-nav-item :to="{ name: 'books.list' }"><i class="fas fa-book"></i> {{ trans('app.navbar.books') }}</b-nav-item>
+							<b-nav-item :to="{ name: 'authors.list' }"><i class="fas fa-user-edit"></i> {{ trans('app.navbar.authors') }}</b-nav-item>
+							<b-nav-item :to="{ name: 'reading_lists.list' }"><i class="fas fa-clipboard-list"></i> {{ trans('app.navbar.reading_lists') }}</b-nav-item>
 						</b-navbar-nav>
 
 						<b-navbar-nav class="ml-auto" v-if="!user">
@@ -79,6 +79,7 @@
 				this.redirect('home');
 			},
 			onError(e) {
+				let error = e;
 				let errors = _.get(error.response, 'data.errors') || [];
 
 				errors.forEach((err) => {
@@ -91,7 +92,7 @@
 				this.toast(_.get(e.data, 'warning'), 'Warning', 'warning');
 				this.toast(_.get(e.data, 'error'), 'Error', 'danger');
 			},
-			toast(message, key, title, variant) {
+			toast(message, title, variant) {
 				if (message) {
 					this.$bvToast.toast(message, {
 						title: title,

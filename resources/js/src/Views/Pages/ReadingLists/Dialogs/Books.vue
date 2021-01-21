@@ -1,15 +1,19 @@
 <template>
 	<div>
-		<b-modal :title="trans('books.actions.authors.search')" :visible="visible" size="xl" scrollable @show="open" @hide="close" @ok="accept()" @cancel="cancel()" >
+		<b-modal :title="trans('readingLists.actions.books.search')" :visible="visible" size="xl" scrollable @show="open" @hide="close" @ok="accept()" @cancel="cancel()" >
 			<template #default>
 				<b-row>
-					<b-col cols="8">
+					<b-col cols="7">
 						<load-spinner :loaded="loaded">
 							<b-table striped responsive small :items="provider" :current-page="pagination.page" :per-page="pagination.count" :fields="fields.results" no-provider-sorting no-provider-filtering>
+								<template #cell(isbn)="data">
+									{{ isbn(data.item.isbn) }}
+								</template>
+
 								<template #cell(actions)="data">
 									<b-button-toolbar>
 										<b-button-group size="sm">
-											<b-button :disabled="isSelected(data.item.id)" type="button" :variant="state(data.item.id)" @click="add(data.item)" :title="trans('books.actions.authors.add')">
+											<b-button :disabled="isSelected(data.item.id)" type="button" :variant="state(data.item.id)" @click="add(data.item)" :title="trans('readingLists.actions.books.add')">
 												<i class="fas fa-user-plus"></i>
 											</b-button>
 										</b-button-group>
@@ -37,16 +41,20 @@
 						</load-spinner>
 					</b-col>
 
-					<b-col cols="4" v-if="data.selected.length === 0" class="text-center">
-						{{ trans('books.actions.authors.empty') }}
+					<b-col cols="5" v-if="data.selected.length === 0" class="text-center">
+						{{ trans('readingLists.actions.books.empty') }}
 					</b-col>
 
-					<b-col cols="4" v-else>
+					<b-col cols="5" v-else>
 						<b-table striped responsive small :items="data.selected" :fields="fields.selected">
+							<template #cell(isbn)="data">
+								{{ isbn(data.item.isbn) }}
+							</template>
+
 							<template #cell(actions)="data">
 								<b-button-toolbar>
 									<b-button-group size="sm">
-										<b-button type="button" variant="outline-danger" @click="remove(data.item.id)" :title="trans('books.actions.authors.remove')">
+										<b-button type="button" variant="outline-danger" @click="remove(data.item.id)" :title="trans('readingLists.actions.books.remove')">
 											<i class="fas fa-user-times"></i>
 										</b-button>
 									</b-button-group>
@@ -103,8 +111,13 @@
 				fields: {
 					results: [
 						{
+							key: 'isbn',
+							label: this.trans('books.attributes.isbn'),
+							sortable: false
+						},
+						{
 							key: 'name',
-							label: this.trans('authors.attributes.name'),
+							label: this.trans('books.attributes.name'),
 							sortable: false
 						},
 						{
@@ -115,8 +128,13 @@
 					],
 					selected: [
 						{
+							key: 'isbn',
+							label: this.trans('books.attributes.isbn'),
+							sortable: false
+						},
+						{
 							key: 'name',
-							label: this.trans('authors.attributes.name'),
+							label: this.trans('books.attributes.name'),
 							sortable: false
 						},
 						{
@@ -143,8 +161,8 @@
 				this.data.selected = this.selected;
 			},
 			isSelected(id) {
-				let index = _.findIndex(this.data.selected, (author, i) => {
-					return (author.id == id);
+				let index = _.findIndex(this.data.selected, (book, i) => {
+					return (book.id == id);
 				});
 
 				return (index >= 0);
@@ -152,14 +170,14 @@
 			state(id) {
 				return (this.isSelected(id) ? 'default' : 'success')
 			},
-			add(author) {
-				if (!this.isSelected(author.id)) {
-					this.data.selected.push(author);
+			add(book) {
+				if (!this.isSelected(book.id)) {
+					this.data.selected.push(book);
 				}
 			},
 			remove(id) {
-				this.data.selected = this.data.selected.filter((author, i) => {
-					return (author.id != id);
+				this.data.selected = this.data.selected.filter((book, i) => {
+					return (book.id != id);
 				});
 			},
 			provider(ctx) {
@@ -170,17 +188,17 @@
 					count: ((ctx.perPage < 1) ? null : ctx.perPage)
 				};
 
-				return axios.get(this.apiRoute('api.authors.index', query))
+				return axios.get(this.apiRoute('api.books.index', query))
 					.then((response) => {
 						let data = response.data;
 						let meta = _.get(data, 'meta');
-						let authors = _.get(data, 'data');
+						let books = _.get(data, 'data');
 
 						this.pagination.count = Number.parseInt(_.get(meta, 'per_page') || 0);
 						this.pagination.pages = meta.last_page;
 						this.pagination.total = meta.total;
 
-						return authors;
+						return books;
 					})
 					.catch((error) => {
 						let errors = _.get(error.response, 'data.errors') || [];

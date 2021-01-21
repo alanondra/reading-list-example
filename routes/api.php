@@ -67,8 +67,11 @@ Route::resource('books', Controllers\BookController::class)
 /*
  * Authenticated Routes
  */
-Route::middleware('auth')
+Route::middleware(['auth.basic', 'verified'])
 	->group(function () {
 		Route::post('/profile', [Controllers\ProfileController::class, 'update'])
 			->name('profile.update');
+
+		Route::resource('readingLists', Controllers\ReadingListController::class)
+			->only(['index', 'show', 'store', 'update', 'destroy']);
 	});
