@@ -1,6 +1,6 @@
 require('./bootstrap');
 
-import App from './src/app';
+import App from './src/App';
 
 window.addEventListener('DOMContentLoaded', () => {
 	window.application = App.create();
